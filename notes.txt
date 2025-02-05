@@ -4,3 +4,4 @@ We plotted temperature and cell abundance (plus my homework Feb 3 homework)
 	- each plot representes a sample
 
 	- environmental groups are shown by color
+	- testing "committing multiple files" from git demo
