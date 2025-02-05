@@ -1,1 +1,5 @@
 We plotted temperature and cell abundance (plus my homework Feb 3 homework)
+
+
+	- each plot representes a sample
+
