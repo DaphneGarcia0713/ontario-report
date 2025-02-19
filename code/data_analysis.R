@@ -2,6 +2,7 @@
 
 # load packages
 library(tidyverse)
+library(ggplot2)
 
 # Grab the data for our analysis
 sample_data <- read_csv("data/sample_data.csv")
@@ -94,26 +95,34 @@ length(unique(sample_data$sample_id))
 
 #anti join_ to exclude certain groups/rows
 
-sample_data
-anti_join(., tazon_clean, by = "sample ID")
+sample_data %>%
+anti_join(., taxon_clean, by = "sample ID")
 
 
+taxon_clean_goodSep<-
+  taxon_clean%>%
+  #replace sample_id column with fixed september names
+  mutate(sample_id= str_replace(sample_id, pattern="Sep", replacement = "September"))
 
-            
-sample_and_taxon <-  sample_data %>% 
-  inner_join(., taxon_clean_goodSept)
 
-#intuition check
-  dim(sample_and_taxon)
-  
-  #test: to ensure trooth of R expression
-  stopifnot(dim(sample_and_taxon) == nrow(sample_data))
-  
-  
-  write_csv(sample_and_taxon, "data/sample_and_taxon.csv")
+#check dimensions
+dim(taxon_clean_goodSep)
 
-sample_and_taxon %>%
-ggplot(aes(x=depth, y=Chloroflexi)) +
-  geompoint() +
-  #add a statistical model
+#inner join
+sample_and_taxon<-
+  sample_data%>%
+  inner_join(.,taxon_clean_goodSep, by="sample_id")
+dim(sample_and_taxon)
+
+#test
+stopifnot(nrow(sample_and_taxon)== nrow(sample_data))
+
+#write out clean data into a new file
+write_csv(sample_and_taxon, "data/sample_and_taxon.csv")
+
+#quickplot of chloroflexi
+sample_and_taxon%>%
+  ggplot(aes(x=depth, y=Chloroflexi))+
+  geom_point()+
+  #add a statostical model
   geom_smooth()
